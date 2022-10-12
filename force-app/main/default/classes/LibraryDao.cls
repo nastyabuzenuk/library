@@ -28,17 +28,20 @@ public with sharing class LibraryDao {
     }
 
     public static List<Book__c> getTerminatedBooks(Integer limitr, Integer offset){
-        List<Book__c> terminatedBooks = [SELECT Name FROM Book__c WHERE Status__c = 'Hold' LIMIT :limitr OFFSET :offset ];
+        List<Subscription__c> term = [SELECT Book__c FROM Subscription__c WHERE Status__c = 'Red Flag' LIMIT :limitr OFFSET :offset ];
+        List<Book__c> terminatedBooks = new List<Book__c>();
+        for(Subscription__c s: term){
+            terminatedBooks.add(s.Book__r);
+        }
         return terminatedBooks;
     }
 
-    // public static Set<Id> getTerminatedReaders(){
-    //     List<Book__c> termBooks = getTerminatedBooks(100,0);
-    //     List<Id> bookIds = new List<Id>();
-    //     for(Book__c b: termBooks){
-    //         bookIds.add(b.Id);
-    //     }
-    //     Set<Id> termReaders = [SELECT Id FROM Reader__c WHERE Reader__r.Subscription__c.Book__c.Id IN :bookIds ];
-    //     return termReaders;
-    // }
+    public static Set<Id> getTerminatedReaders(){
+        Set<Id> termReaders = new Set<Id>();
+        List<Subscription__c> listOfReaders = [SELECT Reader__c FROM Subscription__c WHERE Status__c = 'Red Flag'];
+        for(Subscription__c s: listOfReaders){
+            termReaders.add(s.Reader__r.Id);
+        }
+        return termReaders;
+    }
 }
