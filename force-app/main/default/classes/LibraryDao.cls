@@ -5,6 +5,7 @@ public with sharing class LibraryDao {
             FROM Subscription__c 
             WHERE Reader__r.Id =: readerId];
         return totalSubscribedBooks;
+        // Readers who`s SubscriptionType__c is not not one-time are not in the list because of lookup field filter
     }
 
     public static List<Subscription__c> getAllSubscriptions(Integer limitr, Integer offset){
@@ -28,7 +29,8 @@ public with sharing class LibraryDao {
     }
 
     public static List<Book__c> getTerminatedBooks(Integer limitr, Integer offset){
-        List<Subscription__c> term = [SELECT Book__c FROM Subscription__c WHERE Status__c = 'Red Flag' LIMIT :limitr OFFSET :offset ];
+        //created terminated formulaa field on org
+        List<Subscription__c> term = [SELECT Book__c FROM Subscription__c WHERE Terminated__c = true LIMIT :limitr OFFSET :offset ];
         List<Book__c> terminatedBooks = new List<Book__c>();
         for(Subscription__c s: term){
             terminatedBooks.add(s.Book__r);
@@ -38,9 +40,9 @@ public with sharing class LibraryDao {
 
     public static Set<Id> getTerminatedReaders(){
         Set<Id> termReaders = new Set<Id>();
-        List<Subscription__c> listOfReaders = [SELECT Reader__c FROM Subscription__c WHERE Status__c = 'Red Flag'];
+        List<Subscription__c> listOfReaders = [SELECT Reader__c FROM Subscription__c WHERE Terminated__c = true];
         for(Subscription__c s: listOfReaders){
-            termReaders.add(s.Reader__r.Id);
+            termReaders.add(s.Reader__c);
         }
         return termReaders;
     }
