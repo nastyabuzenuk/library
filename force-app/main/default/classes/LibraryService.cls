@@ -5,8 +5,8 @@ public with sharing class LibraryService {
         subscItem.Reader__c = readerId;
         subscItem.StartDate__c = Date.today();
         try{
-            upsert subscItem;
-        } catch (DmlException e){
+            insert subscItem;
+        } catch (DMLException e){
             System.debug('An error occurred in createSubscription '+ e.getMessage());
         }
         //failed because required field is empty
@@ -17,7 +17,7 @@ public with sharing class LibraryService {
         currentSubsc.ReturnedDate__c = Date.today();
         try{
             update currentSubsc;
-        } catch (DmlException e){
+        } catch (DMLException e){
             System.debug('An error occurred in closeSubscription '+ e.getMessage());
         }
     }
@@ -29,7 +29,7 @@ public with sharing class LibraryService {
         newReader.Email__c = Name + '@domain.com';
         try{
             insert newReader;
-        } catch (DmlException e){
+        } catch (DMLException e){
             System.debug('An error occurred in createReader '+ e.getMessage());
         }
         //Email is required field
@@ -44,7 +44,7 @@ public with sharing class LibraryService {
         }
         try{
             update upgradeReaders;
-        } catch (DmlException e){
+        } catch (DMLException e){
             System.debug('An error occurred in upgradeReader '+ e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public with sharing class LibraryService {
         }
         try{
             delete booksToDelete;
-        } catch (DmlException e){
+        } catch (DMLException e){
             System.debug('An error occurred in deleteBooks '+ e.getMessage());
         }
     }
