@@ -1,3 +1,7 @@
 trigger Triggers on Subscription__c (before insert) {
-    TriggerHandler.addSubscription(Trigger.new);
+    if(Trigger.isBefore){
+        if(Trigger.isInsert){
+            TriggerHandler.addSubscription(Trigger.new);
+        }
+    }
 }
