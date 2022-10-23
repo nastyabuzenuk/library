@@ -9,6 +9,11 @@ private class UtilsTest {
             testAccount.Name = 'Test Field';
             testAccList.Add(testAccount);
         }
+        for(Integer i=0;i<10; i++){
+            Account testAccount1 = new Account();
+            testAccount1.Name = 'Test';
+            testAccList.Add(testAccount1);
+        }
         insert testAccList;
     }
 

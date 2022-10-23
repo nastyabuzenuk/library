@@ -2,19 +2,22 @@
 private class LibraryDaoTest {
     @TestSetup
     static void data(){
-        Subscription__c test = TestDataFactory.createSubsc();
+        for(Integer i = 0; i<5; i++){
+            Subscription__c test = TestDataFactory.createSubsc();
+        }
     }
 
     @isTest
     static void getActiveSubscriptionsTest(){
-        List<Subscription__c> testList = [SELECT Book__c 
-        FROM Subscription__c 
-        WHERE Reader__r.Name = 'Test'];
-        Id readerId = [SELECT Id FROM Reader__c WHERE Name = 'Test'].Id;
+        List<Reader__c> readerIds = [SELECT Id FROM Reader__c WHERE Name = 'Test'];
+        List<Id> readerId = new List<Id>();
+        for(Reader__c r: readerIds){
+            readerId.Add(r.Id);
+        }
         Test.startTest();
-        List<Subscription__c> methodList =  LibraryDao.getActiveSubscriptions(readerId);
+        List<Subscription__c> methodList = LibraryDao.getActiveSubscriptions(readerId[0]);
         Test.stopTest();
-        System.assertEquals(testList, methodList , 'getActiveSubscriptions working right');
+        System.assertEquals(1, methodList.size() , 'getActiveSubscriptions working right');
     }
 
     @isTest
@@ -24,27 +27,28 @@ private class LibraryDaoTest {
         Test.startTest();
         List<Subscription__c> methodList = LibraryDao.getAllSubscriptions(limitr, offset);
         Test.stopTest();
-        List<Subscription__c> testList = [SELECT Book__c,DaysOfHoldAllowed__c,HoldDuration__c,Reader__c,StartDate__c,ReturnedDate__c,Status__c  FROM Subscription__c LIMIT :limitr OFFSET :offset];
-        System.assertEquals(testList.size(), methodList.size(),'getAllSubscriptions working right');
+        System.assertEquals(4, methodList.size(),'getAllSubscriptions working right');
     }
 
     @isTest
     static void getReadersCountTest(){
-        List<AggregateResult> allReaders = [SELECT COUNT(Reader__c) FROM Subscription__c];
         Test.startTest();
         List<AggregateResult> methodList = LibraryDao.getReadersCount();
         Test.stopTest();
-        System.assertEquals(allReaders, methodList,'getReadersCount working right');
+        System.assertEquals(1, methodList.size(),'getReadersCount working right');
     }
 
     @isTest
     static void getReadersOfBookTest(){
-        Id bookId = [SELECT Id FROM Book__c WHERE Name = 'Test Book'].Id;
-        List<Reader__c> testList = [SELECT Name FROM Reader__c WHERE Email__c = 'Test@domain.com'];
+        List<Book__c> bookIds = [SELECT Id FROM Book__c WHERE Name = 'Test Book'];
+        List<Id> bookId = new List<Id>();
+        for(Book__c b: bookIds){
+            bookId.Add(b.Id);
+        }
         Test.startTest();
-        List<Reader__c> methodList = LibraryDao.getReadersOfBook(bookId);
+        List<Reader__c> methodList = LibraryDao.getReadersOfBook(bookId[0]);
         Test.stopTest();
-        System.assertEquals(testList, methodList , 'getReadersOfBook is working right');
+        System.assertEquals(1, methodList.size() , 'getReadersOfBook is working right');
     }
 
     @isTest
@@ -59,7 +63,7 @@ private class LibraryDaoTest {
         Test.startTest();
         List<Book__c> methodList = LibraryDao.getTerminatedBooks(limitr, offset);
         Test.stopTest();
-        System.assertEquals(testList, methodList ,'getTerminatedBooks working right');
+        System.assertEquals(testList.size(), methodList.size() ,'getTerminatedBooks working right');
     }
 
     @isTest
@@ -72,6 +76,6 @@ private class LibraryDaoTest {
         Test.startTest();
         Set<Id> methodSet = LibraryDao.getTerminatedReaders();
         Test.stopTest();
-        System.assertEquals(testSet, methodSet, 'getTerminatedReaders working right');
+        System.assertEquals(testSet.size(), methodSet.size(), 'getTerminatedReaders working right');
     }
 }

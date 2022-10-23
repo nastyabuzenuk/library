@@ -5,10 +5,10 @@ public with sharing class TriggerHandler {
         for(Subscription__c item: subsc){
             bookId.add(item.Book__c);
             readerId.add(item.Reader__c);
-        }
-        List<Subscription__c> subscItem = [SELECT Name FROM Subscription__c WHERE Book__c IN :bookId AND Reader__c IN :readerId];
-        if(subscItem.size()>0){
-            subscItem[0].addError('You can not create Subscription because it already exists');
+            List<Subscription__c> subscItem = [SELECT Name FROM Subscription__c WHERE Book__c IN :bookId AND Reader__c IN :readerId];
+            if(subscItem.size()>0){
+                item.addError('You can not create Subscription because it already exists');
+            }
         }
     }
 
