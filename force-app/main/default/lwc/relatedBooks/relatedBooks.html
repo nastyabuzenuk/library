@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Related Books">
+        <div class="slds-m-around_medium">
+            <template if:true={books.data}>
+                <lightning-datatable
+                        key-field="id"
+                        data={books.data}
+                        columns={columns}
+                        hide-checkbox-column
+                        show-row-number-column>
+                </lightning-datatable>
+            </template>
+            <template if:false={books.data}>
+                <p><lightning-formatted-text value="No data received"></lightning-formatted-text></p>
+            </template>
+            <lightning-button label="Refresh" onclick={handleClick}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
