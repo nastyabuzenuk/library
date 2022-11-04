@@ -1,6 +1,7 @@
 import { LightningElement, wire, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getRelatedBooks from '@salesforce/apex/RelatedBooksLWC.getRelatedBooks';
+import getRefreshRecordData from '@salesforce/apex/RefreshRecordData.integrationCallout'
 
 import NAME_FIELD from '@salesforce/schema/Book__c.Name';
 import AUTHOR_FIELD from '@salesforce/schema/Book__c.Author__c';
@@ -22,12 +23,14 @@ export default class RelatedBooks extends LightningElement {
     }
 
     handleClick(){
-        console.log(JSON.stringify(this.books.data));
         const event = new ShowToastEvent({
-            title: 'Sorry',
-            message: 'Refresh integration is not yet configured'
+            label: 'success',
+            title: 'Success',
+            value: 'success',
+            variant: 'success',
+            message: 'Records was successfully refreshed'
         });
         this.dispatchEvent(event);
-        
+        getRefreshRecordData(this.recordId);
     }
 }

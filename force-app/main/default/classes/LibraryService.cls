@@ -9,7 +9,6 @@ public with sharing class LibraryService {
         } catch (DMLException e){
             System.debug('An error occurred in createSubscription '+ e.getMessage());
         }
-        //failed because required field is empty
     }
 
     public static void closeSubscription(Id subscriptionId){
@@ -32,7 +31,6 @@ public with sharing class LibraryService {
         } catch (DMLException e){
             System.debug('An error occurred in createReader '+ e.getMessage());
         }
-        //Email is required field
     }
 
     public static void upgradeReader(List<Id> readerIds, String subscriptionType){
